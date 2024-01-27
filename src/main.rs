@@ -5,17 +5,24 @@ extern crate tera;
 
 use std::path::{ PathBuf, Path };
 use rocket::fs::NamedFile;
-use rocket::response::content;
-use comrak::{markdown_to_html_with_plugins, Options, Plugins};
-use rocket_dyn_templates::{Template, context};
+use comrak::{ markdown_to_html_with_plugins, Options, Plugins };
+use rocket_dyn_templates::{ Template, context };
 
 #[get("/")]
 fn index() -> Template {
   Template::render("base", context!{
-    content: r#"<a href="/blogs/example.md">link</a>"#
+    content: r#"
+      <a href="/blogs/example.md">blog_directory</a>
+      <a href="/resume.pdf">resume</a>
+      <a href="/palette">palette</a>
+    "#
   })
 }
 
+#[get("/resume.pdf")]
+async fn resume() -> Option<NamedFile> {
+  NamedFile::open(Path::new("/static/resume.pdf")).await.ok()
+}
 #[get("/styles/<file>")]
 async fn styles(file: PathBuf) -> Option<NamedFile> {
   NamedFile::open(Path::new("styles/").join(file)).await.ok()
@@ -39,6 +46,6 @@ async fn blogs(file: String) -> Template {
 #[launch]
 fn rocket() -> _ {
   rocket::build()
-    .mount("/", routes![index, styles, blogs])
+    .mount("/", routes![index, styles, blogs, resume])
     .attach(Template::fairing())
 }

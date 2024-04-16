@@ -4,4 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sycamore = { version = "0.9.0-beta.2", features = ["hydrate"] }
+sycamore = { version = "0.9.0-beta.2", features = ["ssr"] }
+wasm-bindgen = "0.2.82"
+
+[dependencies.web-sys]
+features = ["HtmlInputElement", "InputEvent"]
+version = "0.3.59"

@@ -1,5 +1,14 @@
 use client::App;
 
 fn main() {
-    sycamore::hydrate(App);
+
+    let root = web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .query_selector("#sycamore")
+        .unwrap()
+        .unwrap();
+
+    sycamore::hydrate_to(App, &root);
 }

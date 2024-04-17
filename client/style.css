@@ -1,0 +1,22 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  border-bottom: 1px black solid;
+}
+
+.title {
+  display: inline-block;
+  width: 50%;
+}
+
+.favicons {
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+}

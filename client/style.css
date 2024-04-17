@@ -6,6 +6,23 @@
   padding: 0;
 }
 
+:root {
+  --primary: green;
+}
+
+[data-theme="latte"] {
+  --primary: white;
+}
+[data-theme="frappe"] {
+  --primary: blue;
+}
+[data-theme="macchiato"] {
+  --primary: red;
+}
+[data-theme="mocha"] {
+  --primary: black;
+}
+
 .navbar {
   border-bottom: 1px black solid;
 }
@@ -13,6 +30,7 @@
 .title {
   display: inline-block;
   width: 50%;
+  color: var(--primary);
 }
 
 .favicons {

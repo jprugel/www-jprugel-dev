@@ -3,6 +3,7 @@ use std::io;
 use rocket::{fs::FileServer, get, launch, response, routes, tokio::fs};
 use sycamore::prelude::*;
 
+
 #[get("/")]
 async fn index() -> io::Result<response::content::RawHtml<String>> {
     let index_html = String::from_utf8(fs::read("./client/dist/index.html").await?)

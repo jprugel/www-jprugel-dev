@@ -1,6 +1,10 @@
 use client::App;
+use sycamore::prelude::*;
 
 fn main() {
+
+    console_error_panic_hook::set_once();
+    console_log::init_with_level(log::Level::Debug).unwrap();
 
     let root = web_sys::window()
         .unwrap()
@@ -10,5 +14,5 @@ fn main() {
         .unwrap()
         .unwrap();
 
-    sycamore::hydrate_to(App, &root);
+    sycamore::hydrate_to(|| view! { App {} }, &root);
 }

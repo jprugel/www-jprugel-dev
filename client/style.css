@@ -11,7 +11,7 @@
 }
 
 [data-theme="latte"] {
-  --primary: white;
+  --primary: orange;
 }
 [data-theme="frappe"] {
   --primary: blue;

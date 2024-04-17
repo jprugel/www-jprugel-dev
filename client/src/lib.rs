@@ -2,14 +2,16 @@ use sycamore::prelude::*;
 
 #[component]
 pub fn App<G: Html>() -> View<G> {
-    let theme = create_signal(Theme("latte"));
-    provide_context(theme);
+    create_memo(move || {
+        let theme = create_signal(Theme("latte"));
+        provide_context(theme.get());
 
-    view! {
-        div(data-theme=theme.get().0) {
-            Navbar {}
+        view! {
+            div(data-theme=theme.get().0) {
+                Navbar {}
+            }
         }
-    }
+    }).get_clone()
 }
 
 #[component]
@@ -55,11 +57,11 @@ pub fn ThemeButton<G: Html>() -> View<G> {
     };
 
     view! {
-        button(on:click=change_theme) { "theme"}
+        button(on:click=change_theme) {"theme"}
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub struct Theme(&'static str);
 
 

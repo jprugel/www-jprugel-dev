@@ -1,4 +1,5 @@
 use std::io;
+use std::env;
 
 use rocket::{fs::FileServer, get, launch, response, routes, tokio::fs};
 use sycamore::prelude::*;
@@ -22,6 +23,8 @@ async fn index() -> io::Result<response::content::RawHtml<String>> {
 
 #[launch]
 fn rocket() -> _ {
+    env::set_var("RUST_BACKTRACE", "1");
+
     rocket::build()
         .mount("/", routes![index])
         .mount("/", FileServer::from("./client/dist"))

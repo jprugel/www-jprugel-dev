@@ -4,10 +4,10 @@ use sycamore::prelude::*;
 pub fn App<G: Html>() -> View<G> {
     create_memo(move || {
         let theme = create_signal(Theme("latte"));
-        provide_context(theme.get());
+        provide_context(theme);
 
         view! {
-            div(data-theme=theme.get().0) {
+            div(class="app", data-theme=theme.get().0) {
                 Navbar {}
             }
         }
@@ -52,12 +52,12 @@ pub fn ThemeButton<G: Html>() -> View<G> {
         Theme("latte") => theme.set(Theme("frappe")),
         Theme("frappe") => theme.set(Theme("macchiato")),
         Theme("macchiato") => theme.set(Theme("mocha")),
-        Theme("mocha") => theme.set(Theme("frappe")),
+        Theme("mocha") => theme.set(Theme("latte")),
         _ => theme.set(Theme("null")),
     };
 
     view! {
-        button(on:click=change_theme) {"theme"}
+        button(class="theme", on:click=change_theme) {"theme"}
     }
 }
 

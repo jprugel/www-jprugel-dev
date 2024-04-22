@@ -23,7 +23,8 @@ async fn index() -> io::Result<response::content::RawHtml<String>> {
 
 #[launch]
 fn rocket() -> _ {
-    env::set_var("RUST_BACKTRACE", "1");
+    env::set_var("RUST_BACKTRACE", "full");
+    println!("what: {}", std::env::current_dir().unwrap().to_str().unwrap());
 
     rocket::build()
         .mount("/", routes![index])

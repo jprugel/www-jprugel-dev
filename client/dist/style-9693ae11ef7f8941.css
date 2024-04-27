@@ -1,0 +1,146 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+[data-theme="latte"] {
+  --base: #dce0e8;
+  --mantle: #e6e9ef;
+  --crust: #eff1f5;
+  --surface-zero: #ccd0da;
+  --surface-one: #bcc0cc;
+  --surface-two: #acb0be;
+  --overlay-zero: #9ca0b0;
+  --overlay-one: #8c8fa1;
+  --overlay-two: #7c7f93;
+  --text: #4c4f69;
+  --subtext-zero: #6c6f85;
+  --subtext-one: #5c5f77;
+  --lavender: #7287fd;
+  --blue: #1e66f5;
+  --sapphire: #209fb5;
+  --sky: #04a5e5;
+  --teal: #179299;
+  --green: #40a02b;
+  --yellow: #df8e1d;
+  --peach: #fe640b;
+  --maroon: #e64553;
+  --red: #d20f39;
+  --mauve: #8839ef;
+  --pink: #ea76cb;
+  --flamingo: #dd7878;
+  --rosewater: #dc8a78;
+}
+[data-theme="frappe"] {
+  --base: #303446;
+  --mantle: #292c3c;
+  --crust: #232634;
+  --surface-zero: #414559;
+  --surface-one: #51576d;
+  --surface-two: #626880;
+  --overlay-zero: #737994;
+  --overlay-one: #838ba7;
+  --overlay-two: #949cbb;
+  --text: #c6d0f5;
+  --subtext-zero: #a5adce;
+  --subtext-one: #b5bfe2;
+  --lavender: #babbf1;
+  --blue: #8caaee;
+  --sapphire: #85c1dc;
+  --sky: #99d1db;
+  --teal: #81c8be;
+  --green: #a6d189;
+  --yellow: #e5c890;
+  --peach: #ef9f76;
+  --maroon: #ea999c;
+  --red: #e78284;
+  --mauve: #ca9ee6;
+  --pink: #f4b8e4;
+  --flamingo: #eebebe;
+  --rosewater: #f2d5cf;
+
+}
+[data-theme="macchiato"] {
+  --base: #24273a;
+  --mantle: #1e2030;
+  --crust: #181926;
+  --surface-zero: #363a4f;
+  --surface-one: #494d64;
+  --surface-two: #5b6078;
+  --overlay-zero: #6e738d;
+  --overlay-one: #8087a2;
+  --overlay-two: #939ab7;
+  --text: #cad3f5;
+  --subtext-zero: #a5adcb;
+  --subtext-one: #b8c0e0;
+  --lavender: #b7bdf8;
+  --blue: #8aadf4;
+  --sapphire: #7dc4e4;
+  --sky: #91d7e3;
+  --teal: #8bd5ca;
+  --green: #a6da95;
+  --yellow: #eed49f;
+  --peach: #f5a97f;
+  --maroon: #ee99a0;
+  --red: #ed8796;
+  --mauve: #c6a0f6;
+  --pink: #f5bde6;
+  --flamingo: #f0c6c6;
+  --rosewater: #f4dbd6;
+}
+[data-theme="mocha"] {
+  --base: #1e1e2e;
+  --mantle: #181825;
+  --crust: #11111b;
+  --surface-zero: #313244;
+  --surface-one: #45475a;
+  --surface-two: #585b70;
+  --overlay-zero: #6c7086;
+  --overlay-one: #7f849c;
+  --overlay-two: #9399b2;
+  --text: #cdd6f4;
+  --subtext-zero: #a6adc8;
+  --subtext-one: #bac2de;
+  --lavender: #b4befe;
+  --blue: #89b4fa;
+  --sapphire: #74c7ec;
+  --sky: #89dceb;
+  --teal: #94e2d5;
+  --green: #a6e3a1;
+  --yellow: #f9e2af;
+  --peach: #fab387;
+  --maroon: #eba0ac;
+  --red: #f38ba8;
+  --mauve: #cba6f7;
+  --pink: #f5c2e7;
+  --flamingo: #f2cdcd;
+  --rosewater: #f5e0dc;
+}
+
+.app {
+  background-color: var(--base);
+}
+
+.navbar {
+  display: inline-flex;
+  width: 100%;
+  border-bottom: 1px solid var(--overlay-zero);
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  color: var(--text);
+}
+
+.favicons {
+  text-align: right;
+}
+
+.pain {
+  color: var(--text);
+}

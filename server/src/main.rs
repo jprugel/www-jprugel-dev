@@ -3,9 +3,9 @@ use std::io;
 
 use rocket::{fs::FileServer, get, launch, response, routes, tokio::fs};
 use rocket_db_pools::{Database, Connection};
-use rocket_db_pools::diesel::{prelude::*, QueryResult, PgPool};
+use rocket_db_pools::diesel::{prelude::*, PgPool};
 use sycamore::prelude::*;
-use client::components::*;
+use client::components::article::*;
 
 #[derive(Database)]
 #[database("posts")]
@@ -42,14 +42,25 @@ async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawHtml<
         }
     });
 
-    let db_info: Vec<String> = posts::table
-        .select(posts::body)
+    let db_info: Vec<Post> = posts::table
+        .select(Post::as_select())
         .load(&mut db)
         .await
         .unwrap();
 
+    let example_article = sycamore::render_to_string(|| {
+        view! {
+            client::components::article::Article(
+                id=db_info.get(0).unwrap().id.clone(),
+                title=db_info.get(0).unwrap().title.clone(),
+                date=db_info.get(0).unwrap().date.clone(),
+                body=db_info.get(0).unwrap().body.clone(),
+            ) {}
+        }
+    });
+
     let index_html = index_html.replace("%sycamore.body", &rendered);
-    let index_html = index_html.replace("%db_info.body", format!("{:?}", db_info).as_str());
+    let index_html = index_html.replace("%db_info.body", &example_article);
 
     Ok(response::content::RawHtml(index_html))
 }

@@ -1,7 +1,6 @@
 pub mod components;
 use components::feed::*;
 use sycamore::prelude::*;
-use components::article::*;
 
 #[component]
 pub fn App<G: Html>() -> View<G> {
@@ -13,7 +12,6 @@ pub fn App<G: Html>() -> View<G> {
             div(class="app", data-theme=theme.get().0) {
                 Navbar {}
                 Feed {}
-                Article {}
             }
         }
     })

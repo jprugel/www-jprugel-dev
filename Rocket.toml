@@ -1,2 +1,8 @@
-[default]
+[debug]
+address = "127.0.0.1"
+
+[release]
 address = "0.0.0.0"
+
+[default.databases.posts]
+url = "postgresql://postgres:brQhZXGuSmLKLjDXtFeRvCGmzMXuYvPu@monorail.proxy.rlwy.net:49360/railway"

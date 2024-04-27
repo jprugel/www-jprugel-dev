@@ -134,10 +134,13 @@
 .title {
   display: flex;
   align-items: center;
+  color: var(--text);
 }
-
-.theme {}
 
 .favicons {
   text-align: right;
+}
+
+.pain {
+  color: var(--text);
 }

@@ -1,4 +1,7 @@
+pub mod components;
+use components::feed::*;
 use sycamore::prelude::*;
+use components::article::*;
 
 #[component]
 pub fn App<G: Html>() -> View<G> {
@@ -9,20 +12,12 @@ pub fn App<G: Html>() -> View<G> {
         view! {
             div(class="app", data-theme=theme.get().0) {
                 Navbar {}
+                Feed {}
+                Article {}
             }
         }
-    }).get_clone()
-}
-
-#[component]
-pub fn Navbar<G: Html>() -> View<G> {
-    view! {
-        div(class="navbar") {
-            Title {}
-            ThemeButton {}
-            Favicons {}
-        }
-    }
+    })
+    .get_clone()
 }
 
 #[component]
@@ -61,7 +56,16 @@ pub fn ThemeButton<G: Html>() -> View<G> {
     }
 }
 
+#[component]
+pub fn Navbar<G: Html>() -> View<G> {
+    view! {
+        div(class="navbar") {
+            Title {}
+            ThemeButton {}
+            Favicons {}
+        }
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub struct Theme(&'static str);
-
-

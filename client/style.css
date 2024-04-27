@@ -130,7 +130,7 @@
   width: 100%;
   border-bottom: 1px solid var(--overlay-zero);
   justify-content: space-between;
-  min-height: 5vh;
+  min-height: 5.5vh;
 }
 
 .title {

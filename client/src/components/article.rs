@@ -3,7 +3,7 @@ use sycamore::prelude::*;
 #[component]
 pub fn Article<G: Html>(details: Details) -> View<G> {
     view! {
-        div {
+        div(class="article") {
             Header(title=details.title, date=details.date) {}
             Core(value=details.body) {}
             Footer {}
@@ -14,7 +14,7 @@ pub fn Article<G: Html>(details: Details) -> View<G> {
 #[component]
 pub fn Header<G: Html>(props: HeaderProps) -> View<G> {
     view! {
-        div {
+        div(class="header") {
             p { (props.title) }
             p { (props.date) }
         }
@@ -34,7 +34,7 @@ pub fn Date<G: Html>() -> View<G> {
 #[component]
 pub fn Core<G: Html>(body: BodyProps) -> View<G> {
     view! {
-        p { (body.value) }
+        p(class="core") { (body.value) }
     }
 }
 

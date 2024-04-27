@@ -125,22 +125,62 @@
 }
 
 .navbar {
+  background-color: var(--crust);
   display: inline-flex;
   width: 100%;
   border-bottom: 1px solid var(--overlay-zero);
   justify-content: space-between;
+  min-height: 5vh;
 }
 
 .title {
   display: flex;
-  align-items: center;
   color: var(--text);
 }
 
 .favicons {
-  text-align: right;
 }
 
-.pain {
-  color: var(--text);
+.feed_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
+
+.feed {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.article {
+  border: 1px var(--overlay-zero) solid;
+  border-radius: 7px;
+  width: 85%;
+  margin: 2px;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.header {
+  border-bottom: 1px var(--overlay-zero) solid;
+  padding: 5px;
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: var(--crust);
+}
+
+.core {
+  padding: 5px;
+  background-color: var(--mantle);
+}
+
+.footer {
+  padding: 5px;
+}
+
+

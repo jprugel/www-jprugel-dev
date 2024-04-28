@@ -14,12 +14,12 @@ Domain: Porkbun
 Hosting Service: Railway
 
 ## To Do List:
-[ ] Implement admin login page.
-[ ] Implement single direction encryption for the login. (I understand that its not best practice to roll out my own encryption solution but it is a learning experience)
-[ ] Implement realtime markup converter in the admin panel for submitting blogs.
+- [ ] Implement admin login page.
+- [ ] Implement single direction encryption for the login. (I understand that its not best practice to roll out my own encryption solution but it is a learning experience)
+- [ ] Implement realtime markup converter in the admin panel for submitting blogs.
 
-[ ] Create an SVG for the page logo.
-[ ] Create an ICO for the page logo.
+- [ ] Create an SVG for the page logo.
+- [ ] Create an ICO for the page logo.
 
-[ ] Implement a search bar to fuzzy search the blogs.
-[ ] Implement filters to filter by other terms.
+- [ ] Implement a search bar to fuzzy search the blogs.
+- [ ] Implement filters to filter by other terms.

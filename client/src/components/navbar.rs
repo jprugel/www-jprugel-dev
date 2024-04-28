@@ -30,17 +30,17 @@ pub fn Favicons<G: Html>() -> View<G> {
 
     view! {
         div(class="favicons") {
-            a(class="favicon", href="https://www.github.com/jprugel") {
+            a(class="favicon", target="_blank", href="https://www.github.com/jprugel") {
                 div(
                     dangerously_set_inner_html=GITHUB,
                 )
             }
-            a(class="favicon", href="https://www.linkedin.com/in/jonathon-prugel/") {
+            a(class="favicon", target="_blank", href="https://www.linkedin.com/in/jonathon-prugel/") {
                 div(
                     dangerously_set_inner_html=LINKEDIN,
                 )
             }    
-            a(class="favicon ko-fi", href="https:/ko-fi.com/jprugel") {
+            a(class="favicon ko-fi", target="_blank", href="https://ko-fi.com/jprugel") {
                 div(
                     dangerously_set_inner_html=KOFI,
                 )

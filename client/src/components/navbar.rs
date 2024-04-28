@@ -2,11 +2,14 @@ use sycamore::prelude::*;
 
 #[component]
 pub fn Navbar<G: Html>() -> View<G> {
+    let dropdown_menu_opened = create_signal(false);
+    provide_context(dropdown_menu_opened);
+
     view! {
         div(class="navbar") {
             Title {}
             Favicons {}
-            Settings {} 
+            DropdownMenu {}
         }
     }
 }
@@ -50,7 +53,26 @@ pub fn Favicons<G: Html>() -> View<G> {
 }
 
 #[component]
-pub fn ThemeButton<G: Html>() -> View<G> {
+pub fn Settings<G: Html>() -> View<G> {
+    static SETTINGS_SVG: &str = r#"<svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0-2 0m7 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0m7 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/></svg>"#;
+    let dropdown_menu_opened = use_context::<Signal<bool>>();
+    let open_dropdown = move |_| {
+        dropdown_menu_opened.set(!dropdown_menu_opened.get());
+    };
+
+    view! {
+        a(
+            on:click=open_dropdown,
+        ) {
+            div(
+                dangerously_set_inner_html=SETTINGS_SVG
+            )
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenu<G: Html>() -> View<G> {
     let theme = use_context::<Signal<Theme>>();
     let change_theme = move |_| match theme.get().value {
         "latte" => theme.set(Theme::new("frappe")),
@@ -60,20 +82,15 @@ pub fn ThemeButton<G: Html>() -> View<G> {
         _ => theme.set(Theme::new("null")),
     };
 
+    let dropdown_menu_opened = use_context::<Signal<bool>>();
     view! {
-        button(class="theme", on:click=change_theme) {"theme"}
-    }
-}
-
-#[component]
-pub fn Settings<G: Html>() -> View<G> {
-    static SETTINGS_SVG: &str = r#"<svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0-2 0m7 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0m7 0a1 1 0 1 0 2 0a1 1 0 1 0-2 0"/></svg>"#;
-
-    view! {
-        div(
-            class="settings", 
-            dangerously_set_inner_html=SETTINGS_SVG,
-        )
+        div(class="dropdown_menu_container") {
+            Settings {}
+            div(class="dropdown_menu", data-visibility=dropdown_menu_opened.get()) {
+                a(on:click=change_theme, class="dropdown") { "Theme" }
+                a(href="/login/") { "Login" }
+            }
+        }
     }
 }
 

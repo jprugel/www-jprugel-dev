@@ -1,12 +1,10 @@
 use std::env;
 use std::io;
-use std::future::*;
 
 use rocket::{fs::FileServer, get, launch, response, routes, tokio::fs};
 use rocket_db_pools::{Database, Connection};
 use rocket_db_pools::diesel::{prelude::*, PgPool};
 use sycamore::prelude::*;
-use client::components::article::*;
 
 #[derive(Database)]
 #[database("posts")]
@@ -19,7 +17,6 @@ struct Post {
     title: String,
     date: String,
     body: String,
-    published: bool,
 }
 
 table! {
@@ -45,6 +42,7 @@ async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawHtml<
 
     let db_info: Vec<Post> = posts::table
         .select(Post::as_select())
+        .filter(posts::published.eq(true))
         .load(&mut db)
         .await
         .unwrap();

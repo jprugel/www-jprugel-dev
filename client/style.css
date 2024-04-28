@@ -6,6 +6,10 @@
   padding: 0;
 }
 
+:root {
+  --bg-tr: background 0.2s;
+}
+
 [data-theme="latte"] {
   --base: #dce0e8;
   --mantle: #e6e9ef;
@@ -122,6 +126,7 @@
 
 .app {
   background-color: var(--base);
+  transition: var(--bg-tr);
 }
 
 .navbar {
@@ -131,14 +136,33 @@
   border-bottom: 1px solid var(--overlay-zero);
   justify-content: space-between;
   min-height: 5.5vh;
+  transition: var(--bg-tr);
 }
 
 .title {
   display: flex;
   color: var(--text);
+  flex-grow: 1;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.3rem;
 }
 
 .favicons {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.favicon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ko-fi {
 }
 
 .feed_container {
@@ -172,15 +196,25 @@
   justify-content: space-between;
   width: 100%;
   background-color: var(--crust);
+  transition: var(--bg-tr);
 }
 
 .core {
   padding: 5px;
   background-color: var(--mantle);
+  transition: var(--bg-tr);
 }
 
 .footer {
   padding: 5px;
 }
 
+.settings {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+}
 
+svg {
+  color: var(--text);
+}

@@ -2,8 +2,8 @@ use std::env;
 use std::io;
 
 use rocket::{fs::FileServer, get, launch, response, routes, tokio::fs};
-use rocket_db_pools::{Database, Connection};
 use rocket_db_pools::diesel::{prelude::*, PgPool};
+use rocket_db_pools::{Connection, Database};
 use sycamore::prelude::*;
 
 #[derive(Database)]
@@ -49,17 +49,14 @@ async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawHtml<
 
     let mut example_article = String::new();
 
-    let articles: Vec<String> = db_info
-        .iter()        
-        .map(|x| generate_article(x))
-        .collect();
+    let articles: Vec<String> = db_info.iter().map(generate_article).collect();
 
     articles
         .into_iter()
         .for_each(|x| example_article.push_str(x.as_str()));
 
     let index_html = index_html.replace("%sycamore.body", &rendered);
-    let index_html = index_html.replace("%db_info.body", &example_article.as_str());
+    let index_html = index_html.replace("%db_info.body", example_article.as_str());
 
     Ok(response::content::RawHtml(index_html))
 }
@@ -68,7 +65,7 @@ fn generate_article(db_info: &Post) -> String {
     sycamore::render_to_string(|| {
         view! {
             client::components::article::Article(
-                id=db_info.id.clone(),
+                id=db_info.id,
                 title=db_info.title.clone(),
                 date=db_info.date.clone(),
                 body=db_info.body.clone(),
@@ -80,10 +77,6 @@ fn generate_article(db_info: &Post) -> String {
 #[launch]
 fn rocket() -> _ {
     env::set_var("RUST_BACKTRACE", "full");
-    println!(
-        "what: {}",
-        std::env::current_dir().unwrap().to_str().unwrap()
-    );
 
     rocket::build()
         .attach(Db::init())

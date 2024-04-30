@@ -61,5 +61,3 @@ pub struct HeaderProps {
 pub struct BodyProps {
     pub value: String,
 }
-
-

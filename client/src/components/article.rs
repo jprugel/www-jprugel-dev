@@ -34,7 +34,7 @@ pub fn Date<G: Html>() -> View<G> {
 #[component]
 pub fn Core<G: Html>(body: BodyProps) -> View<G> {
     view! {
-        p(class="core") { (body.value) }
+        p(class="core", dangerously_set_inner_html=<String as Clone>::clone(&body.value))
     }
 }
 

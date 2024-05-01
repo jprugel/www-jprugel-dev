@@ -5,7 +5,6 @@ use rocket::{fs::FileServer, get, launch, response, routes, tokio::fs};
 use rocket_db_pools::diesel::{prelude::*, PgPool};
 use rocket_db_pools::{Connection, Database};
 use sycamore::prelude::*;
-use markdown::*;
 
 #[derive(Database)]
 #[database("posts")]
@@ -50,7 +49,7 @@ async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawHtml<
 
     let mut example_article = String::new();
 
-    let articles: Vec<String> = db_info.iter().map(generate_summary).collect();
+    let articles: Vec<String> = db_info.iter().map(generate_article).collect();
 
     articles
         .into_iter()
@@ -62,7 +61,7 @@ async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawHtml<
     Ok(response::content::RawHtml(index_html))
 }
 
-fn generate_summary(db_info: &Post) -> String {
+fn generate_article(db_info: &Post) -> String {
     let summary = db_info
         .body
         .split_inclusive("  ")
@@ -72,35 +71,12 @@ fn generate_summary(db_info: &Post) -> String {
 
     sycamore::render_to_string(|| {
         view! {
-            client::components::article::Article(
+            client::components::article::ArticleButton(
                 id=db_info.id,
                 title=db_info.title.clone(),
                 date=db_info.date.clone(),
-                body=answer.to_string(),
-            )
-        }
-    })
-}
-
-fn generate_article(db_info: &Post) -> String {
-    let new_body_with_err: Result<String, message::Message> = db_info
-        .body
-        .split("  ")
-        .map(|x| markdown::to_html_with_options(x, &Options::gfm()))
-        .collect();
-
-    let new_body: String = match new_body_with_err {
-        Ok(a) => a,
-        Err(_a) => "new body with err".to_string(),
-    };
-
-    sycamore::render_to_string(|| {
-        view! {
-            client::components::article::Article(
-                id=db_info.id,
-                title=db_info.title.clone(),
-                date=db_info.date.clone(),
-                body=new_body,
+                summary=answer.to_string(),
+                body=db_info.body.clone().to_string(),
             )
         }
     })

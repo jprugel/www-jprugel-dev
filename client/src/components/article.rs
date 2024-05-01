@@ -1,12 +1,11 @@
 use sycamore::prelude::*;
 
 #[component]
-pub fn Article<G: Html>(details: Details) -> View<G> {
+pub fn ArticleButton<G: Html>(details: Details) -> View<G> {
     view! {
         button(class="article") {
             Header(title=details.title, date=details.date) {}
-            Core(value=details.body) {}
-            Footer {}
+            Core(summary=details.summary, body=details.body) {}
         }
     }
 }
@@ -34,13 +33,8 @@ pub fn Date<G: Html>() -> View<G> {
 #[component]
 pub fn Core<G: Html>(body: BodyProps) -> View<G> {
     view! {
-        p(class="core", dangerously_set_inner_html=<String as Clone>::clone(&body.value))
+        p(class="core", dangerously_set_inner_html=<String as Clone>::clone(&body.summary))
     }
-}
-
-#[component]
-pub fn Footer<G: Html>() -> View<G> {
-    view! {}
 }
 
 #[derive(Props)]
@@ -48,6 +42,7 @@ pub struct Details {
     pub id: i32,
     pub title: String,
     pub date: String,
+    pub summary: String,
     pub body: String,
 }
 
@@ -59,5 +54,6 @@ pub struct HeaderProps {
 
 #[derive(Props)]
 pub struct BodyProps {
-    pub value: String,
+    pub summary: String,
+    pub body: String,
 }

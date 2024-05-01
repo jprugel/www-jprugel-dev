@@ -1,4 +1,5 @@
 use sycamore::prelude::*;
+use crate::Themes;
 
 const GITHUB: &'static str = "M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2";
 
@@ -14,8 +15,8 @@ pub fn Navbar<G: Html>() -> View<G> {
     view! {
         div(class="navbar") {
             Title {}
-            Favicons {}
-            DropdownMenu {}
+            FaviconContainer {}
+            SettingsMenu {}
         }
     }
 }
@@ -30,7 +31,7 @@ pub fn Title<G: Html>() -> View<G> {
 }
 
 #[component]
-pub fn Favicons<G: Html>() -> View<G> {
+pub fn FaviconContainer<G: Html>() -> View<G> {
     view! {
         div(class="favicons") {
             a(class="favicon", 
@@ -112,15 +113,14 @@ pub fn Settings<G: Html>() -> View<G> {
 }
 
 #[component]
-pub fn DropdownMenu<G: Html>() -> View<G> {
-    let theme = use_context::<Signal<Theme>>();
+pub fn SettingsMenu<G: Html>() -> View<G> {
+    let theme = use_context::<Signal<Themes>>();
     let change_theme = move |_| {
-        match theme.get().value {
-            "latte" => theme.set(Theme::new("frappe")),
-            "frappe" => theme.set(Theme::new("macchiato")),
-            "macchiato" => theme.set(Theme::new("mocha")),
-            "mocha" => theme.set(Theme::new("latte")),
-            _ => theme.set(Theme::new("null")),
+        match theme.get() {
+            Themes::Latte => theme.set(Themes::Frappe),
+            Themes::Frappe => theme.set(Themes::Macchiato),
+            Themes::Macchiato => theme.set(Themes::Mocha),
+            Themes::Mocha => theme.set(Themes::Latte),
         };
     };
     on_mount(move || {
@@ -129,17 +129,17 @@ pub fn DropdownMenu<G: Html>() -> View<G> {
             let optional_theme_in_storage: Option<String> = local_storage.get_item("theme").expect("well shoot");
             if let Some(theme_target) = optional_theme_in_storage {
                 let _ = match theme_target.as_str() {
-                    "latte" => theme.set(Theme::new("latte")),
-                    "frappe" => theme.set(Theme::new("frappe")),
-                    "macchiato" => theme.set(Theme::new("macchiato")),
-                    "mocha" => theme.set(Theme::new("mocha")),
-                    _ => theme.set(Theme::new("null")),
+                    "latte" => theme.set(Themes::Latte),
+                    "frappe" => theme.set(Themes::Frappe),
+                    "macchiato" => theme.set(Themes::Macchiato),
+                    "mocha" => theme.set(Themes::Mocha),
+                    _ => theme.set(Themes::Latte),
                 };
             }            
         }
         create_effect(move || {
             if let Some(local_storage) = &local_storage {
-                let _ = local_storage.set_item("theme", theme.get().value);
+                let _ = local_storage.set_item("theme", &theme.get().to_string());
             }
         });
     });
@@ -173,17 +173,6 @@ pub fn DropdownMenu<G: Html>() -> View<G> {
                 }
             }
         }
-    }
-}
-
-#[derive(Copy, Clone, PartialEq, Eq)]
-pub struct Theme {
-    pub value: &'static str,
-}
-
-impl Theme {
-    pub fn new(value: &'static str) -> Self {
-        Self { value }
     }
 }
 

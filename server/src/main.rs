@@ -68,7 +68,6 @@ fn generate_summary(db_info: &Post) -> String {
         .split_inclusive("  ")
         .collect::<Vec<&str>>();
 
-    dbg!(&summary);
     let answer = summary[1];
 
     sycamore::render_to_string(|| {

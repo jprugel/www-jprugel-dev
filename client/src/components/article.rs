@@ -3,7 +3,7 @@ use sycamore::prelude::*;
 #[component]
 pub fn Article<G: Html>(details: Details) -> View<G> {
     view! {
-        div(class="article") {
+        button(class="article") {
             Header(title=details.title, date=details.date) {}
             Core(value=details.body) {}
             Footer {}

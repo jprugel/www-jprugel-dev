@@ -214,6 +214,10 @@ a:hover svg {
   color: var(--lavender);
 }
 
+button:hover svg {
+  color: var(--lavender);
+}
+
 .dropdown_menu_container {
   position: relative;
   display: flex;
@@ -255,3 +259,24 @@ a:hover svg {
   visibility: visible;
   opacity: 1;
 }
+
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+button {
+  font-size: 100%;
+  font-family: inherit;
+}
+
+button:hover {
+  border-color: var(--lavender);
+}
+
+button:hover .header {
+  background-color: var(--lavender);
+}
+

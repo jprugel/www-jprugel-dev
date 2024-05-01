@@ -141,7 +141,7 @@
 
 .title {
   display: flex;
-  color: var(--text);
+  color: var(--teal);
   flex-grow: 1;
   display: inline-flex;
   align-items: center;

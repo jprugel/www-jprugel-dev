@@ -123,6 +123,26 @@ pub fn DropdownMenu<G: Html>() -> View<G> {
             _ => theme.set(Theme::new("null")),
         };
     };
+    on_mount(move || {
+        let local_storage = web_sys::window().unwrap().local_storage().unwrap();
+        if let Some(local_storage) = &local_storage {
+            let optional_theme_in_storage: Option<String> = local_storage.get_item("theme").expect("well shoot");
+            if let Some(theme_target) = optional_theme_in_storage {
+                let _ = match theme_target.as_str() {
+                    "latte" => theme.set(Theme::new("latte")),
+                    "frappe" => theme.set(Theme::new("frappe")),
+                    "macchiato" => theme.set(Theme::new("macchiato")),
+                    "mocha" => theme.set(Theme::new("mocha")),
+                    _ => theme.set(Theme::new("null")),
+                };
+            }            
+        }
+        create_effect(move || {
+            if let Some(local_storage) = &local_storage {
+                let _ = local_storage.set_item("theme", theme.get().value);
+            }
+        });
+    });
     let dropdown_ctx = use_context::<Signal<DropdownContext>>();
     let mouse_is_here = use_context::<Signal<MouseIsWithinSettingsMenu>>();
     view! {

@@ -280,3 +280,6 @@ button:hover .header {
   background-color: var(--lavender);
 }
 
+.article [data-selected="true"] {
+  height: 100%;
+}

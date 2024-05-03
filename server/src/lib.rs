@@ -5,6 +5,8 @@ use rocket_db_pools::diesel::{prelude::*, PgPool};
 use rocket_db_pools::{Connection, Database};
 use sycamore::prelude::*;
 
+use client::components::article::Details;
+
 #[derive(Database)]
 #[database("posts")]
 pub struct Db(PgPool);
@@ -70,12 +72,12 @@ fn generate_article(db_info: &Post) -> String {
 
     sycamore::render_to_string(|| {
         view! {
-            client::components::article::ArticleButton(
+            client::components::article::Article(
                 id=db_info.id,
                 title=db_info.title.clone(),
                 date=db_info.date.clone(),
+                body=db_info.body.clone(),
                 summary=answer.to_string(),
-                body=db_info.body.clone().to_string(),
             )
         }
     })

@@ -123,26 +123,6 @@ pub fn SettingsMenu<G: Html>() -> View<G> {
             Themes::Mocha => theme.set(Themes::Latte),
         };
     };
-    on_mount(move || {
-        let local_storage = web_sys::window().unwrap().local_storage().unwrap();
-        if let Some(local_storage) = &local_storage {
-            let optional_theme_in_storage: Option<String> = local_storage.get_item("theme").expect("well shoot");
-            if let Some(theme_target) = optional_theme_in_storage {
-                let _ = match theme_target.as_str() {
-                    "latte" => theme.set(Themes::Latte),
-                    "frappe" => theme.set(Themes::Frappe),
-                    "macchiato" => theme.set(Themes::Macchiato),
-                    "mocha" => theme.set(Themes::Mocha),
-                    _ => theme.set(Themes::Latte),
-                };
-            }            
-        }
-        create_effect(move || {
-            if let Some(local_storage) = &local_storage {
-                let _ = local_storage.set_item("theme", &theme.get().to_string());
-            }
-        });
-    });
     let dropdown_ctx = use_context::<Signal<DropdownContext>>();
     let mouse_is_here = use_context::<Signal<MouseIsWithinSettingsMenu>>();
     view! {

@@ -1,11 +1,21 @@
 use sycamore::prelude::*;
+use wasm_bindgen::JsValue;
 
 #[component]
-pub fn ArticleButton<G: Html>(details: Details) -> View<G> {
+pub fn Article<G: Html>(details: Details) -> View<G> {
+    let selected = create_signal(ArticleSelected(false));
+    let toggle_selected = move |_| {
+        web_sys::console::log_1(&JsValue::from_str("work?"));
+    };
+
     view! {
-        button(class="article") {
-            Header(title=details.title, date=details.date) {}
-            Core(summary=details.summary, body=details.body) {}
+        button(
+            class="article", 
+            on:mouseout=toggle_selected,
+            data-selected=selected.get().0
+        ) {
+            Header(title=details.title, date=details.date)
+            Core(summary=details.summary, body=details.body)
         }
     }
 }
@@ -57,3 +67,6 @@ pub struct BodyProps {
     pub summary: String,
     pub body: String,
 }
+
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct ArticleSelected(bool);

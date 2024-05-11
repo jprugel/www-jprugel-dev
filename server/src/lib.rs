@@ -1,46 +1,68 @@
-use std::io;
+pub mod models;
+pub mod pools;
+pub mod schema;
 
+use rocket::tokio::io;
+use std::sync::{Arc, Mutex};
+
+use crate::models::*;
+use crate::pools::*;
+use crate::schema::*;
+use rocket::serde::json::Json;
+use rocket::serde::Serialize;
 use rocket::{get, response, tokio::fs};
-use rocket_db_pools::diesel::{prelude::*, PgPool};
-use rocket_db_pools::{Connection, Database};
+use rocket_db_pools::diesel::prelude::*;
+use rocket_db_pools::Connection;
 use sycamore::prelude::*;
 
-use client::components::article::Details;
+#[get("/")]
+pub async fn index() -> io::Result<response::content::RawHtml<String>> {
+    // Create the document to be hydrated.
+    let index_html = String::from_utf8(fs::read("./client/dist/index.html").await?)
+        .expect("index.html should be valid utf-8");
+    let rendered = Arc::new(Mutex::new(String::new()));
+    let clone_a = rendered.clone();
+    let clone_b = rendered.clone();
+    tokio::task::spawn_blocking(move || {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let local = tokio::task::LocalSet::new();
+        rt.block_on(async{
+            local.run_until(async move{
+                tokio::task::spawn_local(async move{
+                    get_mutex_val(clone_a).push_str(&sycamore::render_to_string_await_suspense(|| {
+                    view! {
+                        client::App
+                    }
+                }).await);
+                }).await.unwrap();
+            }).await;
+        });
+    }).await?;
 
-#[derive(Database)]
-#[database("posts")]
-pub struct Db(PgPool);
+    //Insert the app into the index.html in the wasm package.
+    let index_html = index_html.replace("%sycamore.body", &get_mutex_val(clone_b));
 
-#[derive(Queryable, Selectable)]
-#[diesel(table_name = posts)]
-struct Post {
-    id: i32,
+    //Return the final html call.
+    Ok(response::content::RawHtml(index_html))
+}
+
+#[derive(Serialize, Default)]
+#[serde(crate = "rocket::serde")]
+pub struct Feed {
+    blogs: Vec<Blog>,
+}
+
+#[derive(Serialize, Default)]
+#[serde(crate = "rocket::serde")]
+struct Blog {
+    id: usize,
     title: String,
     date: String,
     body: String,
 }
 
-table! {
-    posts (id) {
-        id -> Int4,
-        title -> Text,
-        date -> Text,
-        body -> Text,
-        published -> Bool,
-    }
-}
-
-#[get("/")]
-pub async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawHtml<String>> {
-    let index_html = String::from_utf8(fs::read("./client/dist/index.html").await?)
-        .expect("index.html should be valid utf-8");
-
-    let rendered = sycamore::render_to_string(|| {
-        view! {
-            client::App {}
-        }
-    });
-
+#[get("/blogs")]
+pub async fn blogs(mut db: Connection<Db>) -> Json<Feed> {
     let db_info: Vec<Post> = posts::table
         .select(Post::as_select())
         .filter(posts::published.eq(true))
@@ -48,37 +70,20 @@ pub async fn index(mut db: Connection<Db>) -> io::Result<response::content::RawH
         .await
         .unwrap();
 
-    let mut example_article = String::new();
+    let mut feed = Feed::default();
 
-    let articles: Vec<String> = db_info.iter().map(generate_article).collect();
+    db_info.iter().for_each(|x| {
+        feed.blogs.push(Blog {
+            id: x.id as usize,
+            title: x.title.clone(),
+            date: x.date.clone(),
+            body: x.body.clone(),
+        });
+    });
 
-    articles
-        .into_iter()
-        .for_each(|x| example_article.push_str(x.as_str()));
-
-    let index_html = index_html.replace("%sycamore.body", &rendered);
-    let index_html = index_html.replace("%db_info.body", example_article.as_str());
-
-    Ok(response::content::RawHtml(index_html))
+    Json(feed)
 }
 
-fn generate_article(db_info: &Post) -> String {
-    let summary = db_info
-        .body
-        .split_inclusive("  ")
-        .collect::<Vec<&str>>();
-
-    let answer = summary[1];
-
-    sycamore::render_to_string(|| {
-        view! {
-            client::components::article::Article(
-                id=db_info.id,
-                title=db_info.title.clone(),
-                date=db_info.date.clone(),
-                body=db_info.body.clone(),
-                summary=answer.to_string(),
-            )
-        }
-    })
+fn get_mutex_val(target: Arc<Mutex<String>>) -> String {
+    target.lock().unwrap().to_string()
 }

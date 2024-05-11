@@ -1,12 +1,14 @@
 pub mod components;
+pub mod utility;
 
-use components::feed::*;
 use components::navbar::*;
 use sycamore::prelude::*;
 use std::fmt::*;
 
+use components::feed::Feed;
+
 #[component]
-pub fn App<G: Html>() -> View<G> {
+pub async fn App<G: Html>() -> View<G> {
     create_memo(move || {
         let dropdown_ctx = create_signal(DropdownContext::new(false));
         provide_context(dropdown_ctx);
@@ -45,7 +47,6 @@ pub fn App<G: Html>() -> View<G> {
                 dropdown_ctx.set(DropdownContext::new(false));
             }
         };
-
         view! {
             div(
                 class="app",

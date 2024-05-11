@@ -1,6 +1,5 @@
-use client::App;
-use client::components::article::*;
 use sycamore::prelude::*;
+use client::App;
 
 fn main() {
     console_error_panic_hook::set_once();

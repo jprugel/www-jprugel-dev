@@ -4,11 +4,11 @@ use gloo_net::http::*;
 use crate::utility::*;
 
 #[component]
-pub async fn Article<G: Html>() -> View<G> {
+pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
     let post = create_signal(Post::default());
     on_mount(move || {
         spawn_local_scoped(async move {
-            let p = get_post(0).await;
+            let p = get_post(props.id).await;
             post.set(
                 Post::builder()
                     .set_id(p.get_id())
@@ -30,7 +30,11 @@ pub async fn Article<G: Html>() -> View<G> {
                 .split_inclusive("  ")
                 .map(|x| x.to_string())
                 .collect();
-            summary.set(summary_as_vec[1].clone());
+            if summary_as_vec.len() >= 2 {
+                summary.set(summary_as_vec[1].clone());
+            } else {
+                summary.set(body_clone);
+            }
         }
     });
     view! {
@@ -48,6 +52,11 @@ pub async fn Article<G: Html>() -> View<G> {
             }
         }   
     }
+}
+
+#[derive(Props)]
+pub struct ArticleProps {
+    pub id: usize,
 }
 
 async fn get_post(id: usize) -> Post {

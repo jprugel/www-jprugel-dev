@@ -1,4 +1,3 @@
-use std::sync::{Arc, Mutex};
 use sycamore::prelude::*;
 use sycamore::futures::*;
 use gloo_net::http::*;
@@ -6,20 +5,16 @@ use crate::utility::*;
 
 #[component]
 pub async fn Article<G: Html>() -> View<G> {
-    let post_mutex = Arc::new(Mutex::new(Post::default()));
     let post = create_signal(Post::default());
-    let post_clone = Arc::clone(&post_mutex);
     on_mount(move || {
         spawn_local_scoped(async move {
-            let new_post = get_post(0).await;
-            let mut guard = post_clone.lock().unwrap();
-            *guard = new_post;
+            let p = get_post(0).await;
             post.set(
                 Post::builder()
-                    .set_id(guard.get_id())
-                    .set_title(&guard.get_title())
-                    .set_date(&guard.get_date())
-                    .set_body(&guard.get_body())
+                    .set_id(p.get_id())
+                    .set_title(&p.get_title())
+                    .set_date(&p.get_date())
+                    .set_body(&p.get_body())
                     .build()
             );
         });

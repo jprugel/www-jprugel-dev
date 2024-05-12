@@ -19,10 +19,12 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
             );
         });
     });
+    let summary = create_signal(String::new());
+    let injected = create_signal(String::new());
     let selected = create_signal(ArticleSelected(false));
     let toggle_selected = move |_| {
+        selected.set(ArticleSelected(!selected.get().0));
     };
-    let summary = create_signal(String::new());
     create_effect(move || {
         let body_clone = post.get_clone().get_body();
         if body_clone.len() >= 1 {
@@ -37,10 +39,17 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
             }
         }
     });
+    create_effect(move || {
+        if selected.get().0 {
+            injected.set(post.get_clone().get_body().split("  ").map(markdown::to_html).collect::<String>());
+        } else {
+            injected.set(summary.get_clone());
+        }
+    });
     view! {
          button(
             class="article", 
-            on:mouseout=toggle_selected,
+            on:click=toggle_selected,
             data-selected=selected.get().0
         ) {
             div(class="header") {
@@ -48,7 +57,7 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
                 p { (post.get_clone().get_date()) }
             }
             div(class="core") {
-                p(dangerously_set_inner_html=markdown::to_html(&summary.get_clone()))
+                p(dangerously_set_inner_html=injected.get_clone())
             }
         }   
     }

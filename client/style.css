@@ -186,6 +186,9 @@
   color: var(--text);
   overflow: hidden;
 }
+.article a {
+  color: var(--blue);
+}
 
 .header {
   border-bottom: 1px var(--overlay-zero) solid;
@@ -201,6 +204,7 @@
   padding: 5px;
   background-color: var(--mantle);
   transition: var(--bg-tr);
+  text-align: left;
 }
 
 .footer {

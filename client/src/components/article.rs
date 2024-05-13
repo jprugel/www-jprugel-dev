@@ -45,7 +45,7 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
                 post.get_clone()
                     .get_body()
                     .split("  ")
-                    .map(markdown::to_html)
+                    .map(|x| markdown::to_html_with_options(x, &markdown::Options::gfm()).unwrap())
                     .collect::<String>(),
             );
         } else {

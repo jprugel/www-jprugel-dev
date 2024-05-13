@@ -175,7 +175,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: green solid 2px;
 }
 
 .article {

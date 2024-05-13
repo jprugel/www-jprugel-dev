@@ -1,7 +1,7 @@
-use sycamore::prelude::*;
-use sycamore::futures::*;
-use gloo_net::http::*;
 use crate::utility::*;
+use gloo_net::http::*;
+use sycamore::futures::*;
+use sycamore::prelude::*;
 
 #[component]
 pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
@@ -15,7 +15,7 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
                     .set_title(&p.get_title())
                     .set_date(&p.get_date())
                     .set_body(&p.get_body())
-                    .build()
+                    .build(),
             );
         });
     });
@@ -41,26 +41,33 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
     });
     create_effect(move || {
         if selected.get().0 {
-            injected.set(post.get_clone().get_body().split("  ").map(markdown::to_html).collect::<String>());
+            injected.set(
+                post.get_clone()
+                    .get_body()
+                    .split("  ")
+                    .map(markdown::to_html)
+                    .collect::<String>(),
+            );
         } else {
             injected.set(summary.get_clone());
         }
     });
     view! {
-         button(
-            class="article", 
-            on:click=toggle_selected,
-            data-selected=selected.get().0
-        ) {
-            div(class="header") {
-                p { (post.get_clone().get_title()) }
-                p { (post.get_clone().get_date()) }
+       
+            button(
+                class="article",
+                on:click=toggle_selected,
+                data-selected=selected.get().0
+            ) {
+                div(class="header") {
+                    p { (post.get_clone().get_title()) }
+                    p { (post.get_clone().get_date()) }
+                }
+                div(class="core") {
+                    p(dangerously_set_inner_html=injected.get_clone())
+                }
             }
-            div(class="core") {
-                p(dangerously_set_inner_html=injected.get_clone())
-            }
-        }   
-    }
+        }
 }
 
 #[derive(Props)]
@@ -69,10 +76,7 @@ pub struct ArticleProps {
 }
 
 async fn get_post(id: usize) -> Post {
-    let blogs = Request::get("/blogs")
-        .send()
-        .await
-        .unwrap();
+    let blogs = Request::get("/blogs").send().await.unwrap();
 
     let feed: Feed = blogs.json().await.expect("failed to parse to feed");
     feed.blogs.get(id).expect("0th post does not exist").clone()

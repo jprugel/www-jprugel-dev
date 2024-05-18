@@ -1,7 +1,7 @@
 use std::env;
 use rocket::{fs::FileServer, launch, routes};
 use rocket_db_pools::Database;
-use server::{index, blogs};
+use server::{index, feed};
 use server::pools::Db;
 
 #[launch]
@@ -10,6 +10,6 @@ fn rocket() -> _ {
 
     rocket::build()
         .attach(Db::init())
-        .mount("/", routes![index, blogs])
+        .mount("/", routes![index, feed])
         .mount("/", FileServer::from("./client/dist"))
 }

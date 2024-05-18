@@ -49,32 +49,24 @@ pub async fn index() -> io::Result<response::content::RawHtml<String>> {
 #[derive(Serialize, Default)]
 #[serde(crate = "rocket::serde")]
 pub struct Feed {
-    blogs: Vec<Blog>,
+    blogs: Vec<Article>,
 }
 
-#[derive(Serialize, Default)]
-#[serde(crate = "rocket::serde")]
-struct Blog {
-    id: usize,
-    title: String,
-    date: String,
-    body: String,
-}
-
-#[get("/blogs")]
-pub async fn blogs(mut db: Connection<Db>) -> Json<Feed> {
-    let db_info: Vec<Post> = posts::table
-        .select(Post::as_select())
+#[get("/feed")]
+pub async fn feed(mut db: Connection<Db>) -> Json<Feed> {
+    let db_info: Vec<Article> = posts::table
         .filter(posts::published.eq(true))
+        .limit(5)
+        .select(Article::as_select())
         .load(&mut db)
         .await
-        .unwrap();
+        .expect("Failed to connect to database");
 
     let mut feed = Feed::default();
 
     db_info.iter().for_each(|x| {
-        feed.blogs.push(Blog {
-            id: x.id as usize,
+        feed.blogs.push(Article {
+            id: x.id,
             title: x.title.clone(),
             date: x.date.clone(),
             body: x.body.clone(),

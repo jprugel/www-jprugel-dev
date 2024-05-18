@@ -28,7 +28,7 @@ pub async fn Feed<G: Html>() -> View<G> {
 }
 
 async fn get_post_count() -> usize {
-    let posts = Request::get("/blogs")
+    let posts = Request::get("/feed")
         .send()
         .await
         .unwrap();

@@ -76,7 +76,7 @@ pub struct ArticleProps {
 }
 
 async fn get_post(id: usize) -> Post {
-    let blogs = Request::get("/blogs").send().await.unwrap();
+    let blogs = Request::get("/feed").send().await.unwrap();
 
     let feed: Feed = blogs.json().await.expect("failed to parse to feed");
     feed.blogs.get(id).expect("0th post does not exist").clone()

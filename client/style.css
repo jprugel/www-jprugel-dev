@@ -67,62 +67,6 @@
   --rosewater: #f2d5cf;
 
 }
-[data-theme="macchiato"] {
-  --base: #24273a;
-  --mantle: #1e2030;
-  --crust: #181926;
-  --surface-zero: #363a4f;
-  --surface-one: #494d64;
-  --surface-two: #5b6078;
-  --overlay-zero: #6e738d;
-  --overlay-one: #8087a2;
-  --overlay-two: #939ab7;
-  --text: #cad3f5;
-  --subtext-zero: #a5adcb;
-  --subtext-one: #b8c0e0;
-  --lavender: #b7bdf8;
-  --blue: #8aadf4;
-  --sapphire: #7dc4e4;
-  --sky: #91d7e3;
-  --teal: #8bd5ca;
-  --green: #a6da95;
-  --yellow: #eed49f;
-  --peach: #f5a97f;
-  --maroon: #ee99a0;
-  --red: #ed8796;
-  --mauve: #c6a0f6;
-  --pink: #f5bde6;
-  --flamingo: #f0c6c6;
-  --rosewater: #f4dbd6;
-}
-[data-theme="mocha"] {
-  --base: #1e1e2e;
-  --mantle: #181825;
-  --crust: #11111b;
-  --surface-zero: #313244;
-  --surface-one: #45475a;
-  --surface-two: #585b70;
-  --overlay-zero: #6c7086;
-  --overlay-one: #7f849c;
-  --overlay-two: #9399b2;
-  --text: #cdd6f4;
-  --subtext-zero: #a6adc8;
-  --subtext-one: #bac2de;
-  --lavender: #b4befe;
-  --blue: #89b4fa;
-  --sapphire: #74c7ec;
-  --sky: #89dceb;
-  --teal: #94e2d5;
-  --green: #a6e3a1;
-  --yellow: #f9e2af;
-  --peach: #fab387;
-  --maroon: #eba0ac;
-  --red: #f38ba8;
-  --mauve: #cba6f7;
-  --pink: #f5c2e7;
-  --flamingo: #f2cdcd;
-  --rosewater: #f5e0dc;
-}
 
 .app {
   background-color: var(--base);
@@ -135,6 +79,7 @@
   width: 100%;
   border-bottom: 1px solid var(--overlay-zero);
   justify-content: space-between;
+  align-items: center;
   min-height: 5.5vh;
   transition: var(--bg-tr);
 }
@@ -216,11 +161,11 @@ svg {
 }
 
 a:hover svg {
-  color: var(--lavender);
+  color: var(--blue);
 }
 
 button:hover svg {
-  color: var(--lavender);
+  color: var(--blue);
 }
 
 .dropdown_menu_container {
@@ -251,7 +196,7 @@ button:hover svg {
 }
 
 .dropdown_menu a:hover {
-  background-color: var(--lavender);
+  background-color: var(--blue);
   color: white;
 }
 
@@ -282,7 +227,7 @@ button:hover {
 }
 
 button:hover .header {
-  background-color: var(--lavender);
+  background-color: var(--blue);
 }
 
 .article[data-selected="false"] {
@@ -291,4 +236,31 @@ button:hover .header {
 
 .article[data-selected="true"] {
   height: 100%;
+}
+
+.search-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.search {
+  width: 30vw;
+  height: 100%;
+  background-color: var(--crust);
+  border: var(--overlay-zero) 1px solid;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+  color: var(--text);
+  outline: none;
+}
+
+.search-svg {
+  color: var(--text);
+  width: auto;
+  height: 1.5em;
 }

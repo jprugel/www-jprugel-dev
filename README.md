@@ -19,3 +19,10 @@ I wanted a website that I can add reactivity to and I wanted to do it in a langu
 ## Standards
 - The "Blog" is the whole site.
 - The "Feed" is within the "Blog" and it contains "Articles"
+- The DataBase is called "posts" but this is temporary
+- The "articles" database will expand on posts with: 
+  - id: int
+  - title: str
+  - date: date
+  - hook: str
+  - body: str

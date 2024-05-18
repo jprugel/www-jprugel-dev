@@ -65,8 +65,6 @@ pub async fn App<G: Html>() -> View<G> {
 enum Themes {
     Latte,
     Frappe,
-    Macchiato,
-    Mocha,
 }
 
 impl Themes {
@@ -74,8 +72,6 @@ impl Themes {
         match target.as_str() {
             "latte" => Themes::Latte,
             "frappe" => Themes::Frappe,
-            "macchiato" => Themes::Macchiato,
-            "mocha" => Themes::Mocha,
             _ => Themes::Latte,
         }
     }
@@ -86,8 +82,6 @@ impl Display for Themes {
         match self {
             Themes::Latte => write!(f, "latte"),
             Themes::Frappe => write!(f, "frappe"),
-            Themes::Macchiato => write!(f, "macchiato"),
-            Themes::Mocha => write!(f, "mocha"),
         }
     }
 }

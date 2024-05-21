@@ -1,6 +1,7 @@
 pub mod models;
 pub mod pools;
 pub mod schema;
+pub mod utility;
 
 use rocket::tokio::io;
 use std::sync::{Arc, Mutex};
@@ -8,6 +9,7 @@ use std::sync::{Arc, Mutex};
 use crate::models::*;
 use crate::pools::*;
 use crate::schema::*;
+use crate::utility::*;
 use rocket::serde::json::Json;
 use rocket::serde::Serialize;
 use rocket::{get, response, tokio::fs};
@@ -49,31 +51,42 @@ pub async fn index() -> io::Result<response::content::RawHtml<String>> {
 #[derive(Serialize, Default)]
 #[serde(crate = "rocket::serde")]
 pub struct Feed {
-    blogs: Vec<Article>,
+    articles: Vec<ClientArticle>,
 }
 
+impl Feed {
+    fn new(articles: Vec<ClientArticle>) -> Self {
+        Self {
+            articles,
+        }
+    }
+}
+
+// Gets all articles from the server.
 #[get("/feed")]
 pub async fn feed(mut db: Connection<Db>) -> Json<Feed> {
     let db_info: Vec<Article> = posts::table
         .filter(posts::published.eq(true))
-        .limit(5)
         .select(Article::as_select())
         .load(&mut db)
         .await
         .expect("Failed to connect to database");
 
-    let mut feed = Feed::default();
+    let client = db_info.into_iter()
+        .map(|x| {
+            let hook = x.body.split_inclusive("  ").collect::<Vec<&str>>()[1];
 
-    db_info.iter().for_each(|x| {
-        feed.blogs.push(Article {
-            id: x.id,
-            title: x.title.clone(),
-            date: x.date.clone(),
-            body: x.body.clone(),
-        });
-    });
+            ClientArticle {
+                id: x.id as usize,
+                title: x.title,
+                date: x.date,
+                hook: hook.to_string(),
+                body: x.body,
+            }
+        })
+        .collect();
 
-    Json(feed)
+    Json(Feed::new(client))
 }
 
 fn get_mutex_val(target: Arc<Mutex<String>>) -> String {

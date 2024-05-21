@@ -1,6 +1,4 @@
-use rocket_db_pools::diesel::{
-    prelude::*, 
-};
+use rocket_db_pools::diesel::prelude::*; 
 use rocket::serde::{Serialize, Deserialize};
 use crate::schema::*;
 

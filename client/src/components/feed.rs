@@ -3,36 +3,52 @@ use crate::utility::Feed;
 use sycamore::prelude::*;
 use sycamore::futures::*;
 use gloo_net::http::*;
+use crate::utility::SearchQuery;
 
 #[component]
-pub async fn Feed<G: Html>() -> View<G> {
-    let post_count = create_signal(0);
+pub fn Feed<G: Html>() -> View<G> {
+    let feed = create_signal(Feed::default());
+    let search_query = use_context::<Signal<SearchQuery>>();
     on_mount(move || {
         spawn_local_scoped(async move {
-            post_count.set(get_post_count().await);
+            feed.set(get_feed_from_server().await);
         });
     });
-    let articles = create_signal(view! {});
+
+    let feed_view = create_signal(view! {});
     create_effect(move || {
-        let mut articles_vec: Vec<View<G>> = vec![];
-        for i in 0..post_count.get() {
-            articles_vec.push(view! {Article(id=i)});
-        }
-        articles.set(View::new_fragment(articles_vec));
+        let articles: Vec<View<G>> = feed.get_clone()
+            .articles
+            .into_iter()
+            .filter(|x| {
+                x.body.to_lowercase().contains(search_query.get_clone().0.to_lowercase().as_str())
+            })
+            .map(|x| view! {Article(
+                id=x.id,
+                title=x.title,
+                date=x.date,
+                hook=x.hook,
+                body=x.body,
+            )})
+            .collect();
+
+        feed_view.set(View::new_fragment(articles));
     });
+
     view! {
         div(class="feed") {
-            (articles.get_clone())
+            (feed_view.get_clone())
         }
     }
 }
 
-async fn get_post_count() -> usize {
-    let posts = Request::get("/feed")
+async fn get_feed_from_server() -> Feed {
+    let feed = Request::get("/feed")
         .send()
         .await
-        .unwrap();
+        .expect("Failed to GET feed");
 
-    let feed: Feed = posts.json().await.unwrap();
-    feed.blogs.len()
+    feed.json()
+        .await
+        .expect("Failed to parse feed")
 }

@@ -3,19 +3,40 @@ pub mod utility;
 
 use components::navbar::*;
 use sycamore::prelude::*;
-use std::fmt::*;
 
 use components::feed::Feed;
+use components::login::{
+    LoginVisibility,
+    LoginMP,
+};
+use utility::*;
 
 #[component]
 pub async fn App<G: Html>() -> View<G> {
     create_memo(move || {
-        let dropdown_ctx = create_signal(DropdownContext::new(false));
-        provide_context(dropdown_ctx);
-        let mouse_is_here = create_signal(MouseIsWithinSettingsMenu(true));
-        provide_context(mouse_is_here);
+        let settings_visibility = create_signal(DropdownContext::new(false));
+        provide_context(settings_visibility);
+        let settings_mouse_present = create_signal(MouseIsWithinSettingsMenu(true));
+        provide_context(settings_mouse_present);
+        let login_mouse_present = create_signal(LoginMP(false));
+        provide_context(login_mouse_present);
         let theme: Signal<Themes> = create_signal(Themes::Latte);
         provide_context(theme);
+        let login_visibility = create_signal(LoginVisibility(false));
+        provide_context(login_visibility);
+        let search_query = create_signal(SearchQuery::default());
+        provide_context(search_query);
+
+        let handle_click = move |_| {
+            if !settings_mouse_present.get().0 {
+                settings_visibility.set(DropdownContext::new(false));
+            }
+
+            if !login_mouse_present.get().0 {
+                login_visibility.set(LoginVisibility(false))
+            }
+        };
+
         on_mount(move || {
             let local_storage: Option<web_sys::Storage> = web_sys::window()
                 .unwrap()
@@ -42,11 +63,6 @@ pub async fn App<G: Html>() -> View<G> {
             }
         });
 
-        let handle_click = move |_| {
-            if !mouse_is_here.get().0 {
-                dropdown_ctx.set(DropdownContext::new(false));
-            }
-        };
         view! {
             div(
                 class="app",
@@ -59,29 +75,4 @@ pub async fn App<G: Html>() -> View<G> {
         }
     })
     .get_clone()
-}
-
-#[derive(Copy, Clone, PartialEq, Eq)]
-enum Themes {
-    Latte,
-    Frappe,
-}
-
-impl Themes {
-    fn from_string(target: String) -> Themes {
-        match target.as_str() {
-            "latte" => Themes::Latte,
-            "frappe" => Themes::Frappe,
-            _ => Themes::Latte,
-        }
-    }
-}
-
-impl Display for Themes {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Themes::Latte => write!(f, "latte"),
-            Themes::Frappe => write!(f, "frappe"),
-        }
-    }
 }

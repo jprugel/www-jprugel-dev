@@ -264,3 +264,47 @@ button:hover .header {
   width: auto;
   height: 1.5em;
 }
+
+.login {
+  position: absolute;
+  width: 50vw;
+  height: 50vh;
+  background-color: var(--mantle);
+  border: 1px solid var(--overlay-zero);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+          
+}
+
+.sub {
+  width: 50%;
+  height: 20%;
+  background-color: var(--blue);
+  border: 1px solid var(--overlay-zero);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.login-items {
+  width: 50%;
+  height: 60%;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: var(--crust);
+  border: 1px solid var(--overlay-zero);
+}
+
+.login-label {
+  color: var(--text);
+}
+
+.login-title {
+  color: var(--text);
+}

@@ -1,6 +1,4 @@
 use sycamore::prelude::*;
-use wasm_bindgen::JsValue;
-use gloo_console::log;
 use markdown::*;
 
 #[component]
@@ -37,7 +35,6 @@ pub async fn Article<G: Html>(props: ArticleProps) -> View<G> {
 
 #[derive(Props)]
 pub struct ArticleProps {
-    id: usize,
     title: String,
     date: String,
     hook: String,

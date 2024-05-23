@@ -24,7 +24,6 @@ pub fn Feed<G: Html>() -> View<G> {
                 x.body.to_lowercase().contains(search_query.get_clone().0.to_lowercase().as_str())
             })
             .map(|x| view! {Article(
-                id=x.id,
                 title=x.title,
                 date=x.date,
                 hook=x.hook,
